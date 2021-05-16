@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -68,20 +69,13 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     @FXML   
             Color gray;
     
-    @FXML 
-            TableColumn <Task, String> taskCol;
-    @FXML 
-            TableColumn <Task, String> startCol;
-    @FXML 
-            TableColumn<Task, ChoiceBox> endCol;
 //</editor-fold>
     
     ObservableList<Task> data = FXCollections.observableArrayList();
     
     ArrayList<ChoiceBox> TimeArrayList = new ArrayList<ChoiceBox>();
     ArrayList<ChoiceBox> minutesArrayList = new ArrayList<ChoiceBox>();
-    ChoiceBox<Integer> tesztBox = new ChoiceBox<>(); 
-
+    ChoiceBox<Integer> tesztBox = new ChoiceBox<>();
     ArcGenerator arcs = new ArcGenerator();
     
     float angle = 0.0f;
@@ -100,7 +94,7 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     
     @FXML
     private void updateButtonAction(ActionEvent event) {
-        updateClocks();
+//        updateClocks();
     }
     
 
@@ -115,32 +109,39 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
         tesztBox.getItems().add(30);
         
         
-//       TableColumn taskCol = new TableColumn("Feladat");
-//       TableColumn time = new TableColumn("Idő");
-//       TableColumn startCol = new TableColumn("Kezdés");
-       TableColumn endCol2 = new TableColumn("Teszt");
+       TableColumn taskCol = new TableColumn("Feladat");
+       TableColumn startPeriod = new TableColumn("Kezdés");
+       TableColumn endPeriod = new TableColumn("Befejezés");
        
-       data.add(new Task("Edzés", "7:30", tesztBox));
+       TableColumn startHourCol = new TableColumn("Óra");
+       TableColumn startMinuteCol = new TableColumn("Perc");
+       TableColumn endHourCol = new TableColumn("Óra");
+       TableColumn endMinuteCol = new TableColumn("Perc");
+       
+        table.getColumns().addAll(taskCol,startPeriod,endPeriod);
+        startPeriod.getColumns().addAll(startHourCol, startMinuteCol);
+        endPeriod.getColumns().addAll(endHourCol, endMinuteCol);
+      
+       
+       data.add(new Task("Edzés", tesztBox, tesztBox, tesztBox, tesztBox));
        taskCol.setCellFactory(TextFieldTableCell.forTableColumn());
-       startCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
-       endCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
+       startHourCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
+       startMinuteCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
+       endHourCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
+//       endCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
+        System.out.println("Lefutott a data.add");
+        table.setItems(data);
        
-
+        try {
+            taskCol.setCellValueFactory(new PropertyValueFactory<Task, String>("task"));
+            startHourCol.setCellValueFactory(new PropertyValueFactory<Task, ChoiceBox>("startH"));
+            startMinuteCol.setCellValueFactory(new PropertyValueFactory<Task, ChoiceBox>("startM"));
+            endHourCol.setCellValueFactory(new PropertyValueFactory<Task, ChoiceBox>("endH"));
+            endMinuteCol.setCellValueFactory(new PropertyValueFactory<Task, ChoiceBox>("endM"));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
        
-       taskCol.setCellValueFactory(new PropertyValueFactory<Task, String>("task"));
-       startCol.setCellValueFactory(new PropertyValueFactory<Task, String>("startTime"));
-       endCol.setCellValueFactory(new PropertyValueFactory<Task, ChoiceBox>("endTime"));
-
-       
-       taskCol.setMinWidth(100);
-
-       table.setItems(data);
-       table.getColumns().addAll(endCol2);
-//       table.getColumns().addAll(taskCol, startCol, endCol);
-//       time.getColumns().addAll(startCol, endCol);
-       
-        System.out.println("Teszt módosítás");
-    
     }
     
     private void choiceBoxMethod(){  
@@ -278,32 +279,32 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
        String endTime = choiceBoxEnd.getValue() + ":" +choiceBoxEndMinute.getValue();
 //       Task task = new Task(inputTask.getText(),startTime,endTime);
 //       data.add(task);
-       updateClocks();
+//       updateClocks();
        }
    }
    
-    private void updateClocks() {
-        anpa2.getChildren().clear();
-        setImage();
-        ArrayList<Arc> arcList = new ArrayList<>();
-        int index = 0;
-        arcList = arcs.createArc();
-
-        for (Task actualTask : data) {
-            List<String> arrListStartTime = new ArrayList<>(Arrays.asList(actualTask.getStartTime().split(":"))); 
-//            List<String> arrListEndTime = new ArrayList<>(Arrays.asList(actualTask.getEndTime().getValue().split(":"))); 
-            Integer startH = Integer.parseInt(arrListStartTime.get(0));
-            Integer startM = Integer.parseInt(arrListStartTime.get(1)); 
-//            Integer endH = Integer.parseInt(arrListEndTime.get(0));
-//            Integer endM = Integer.parseInt(arrListEndTime.get(1));
-//            System.out.println("startH: " + startH +"\n" +"start M: " +startM + "\n"+ "  endH: " + endH + "\n" +"\n endM" +endM);
-//            setArcVisual(arcList.get(index),startH,startM,endH,endM,150.0f);
-            index++;
-
-        }
-        
-        
-    }
+//    private void updateClocks() {
+//        anpa2.getChildren().clear();
+//        setImage();
+//        ArrayList<Arc> arcList = new ArrayList<>();
+//        int index = 0;
+//        arcList = arcs.createArc();
+//
+//        for (Task actualTask : data) {
+//            List<String> arrListStartTime = new ArrayList<>(Arrays.asList(actualTask.getStartTime().split(":"))); 
+////            List<String> arrListEndTime = new ArrayList<>(Arrays.asList(actualTask.getEndTime().getValue().split(":"))); 
+//            Integer startH = Integer.parseInt(arrListStartTime.get(0));
+//            Integer startM = Integer.parseInt(arrListStartTime.get(1)); 
+////            Integer endH = Integer.parseInt(arrListEndTime.get(0));
+////            Integer endM = Integer.parseInt(arrListEndTime.get(1));
+////            System.out.println("startH: " + startH +"\n" +"start M: " +startM + "\n"+ "  endH: " + endH + "\n" +"\n endM" +endM);
+////            setArcVisual(arcList.get(index),startH,startM,endH,endM,150.0f);
+//            index++;
+//
+//        }
+//        
+//        
+//    }
 
    
    

@@ -17,43 +17,61 @@ import javafx.scene.control.ChoiceBox;
  */
 public class Task {
     
-    private final SimpleStringProperty task;
-    private final SimpleStringProperty startTime;
-    private ChoiceBox<Integer> endTime;
+    String task;
+    ChoiceBox<Integer> startHour;
+    ChoiceBox<Integer> startMinute;
+    ChoiceBox<Integer> endHour;
+    ChoiceBox<Integer> endMinute;
     
+
     
-    Task(String task, String startT, ChoiceBox<Integer> endTime){
-        this.task = new SimpleStringProperty(task);
-        this.startTime = new SimpleStringProperty(startT);
-        this.endTime = endTime;
+    Task(String task, ChoiceBox<Integer> startH, ChoiceBox<Integer> startM, ChoiceBox<Integer> endH, ChoiceBox<Integer> endM){
+        this.task = task;
+        this.startHour = startH;
+        this.startMinute = startM;
+        this.endHour = endH;
+        this.endMinute = endM;
         
     }
-    
-    
-    public String getTask() {
-        return task.get();
+
+    public ChoiceBox<Integer> getStartHour() {
+        return startHour;
     }
 
-    public String getStartTime() {
-        
-        return startTime.get();
+    public void setStartHour(ChoiceBox<Integer> startHour) {
+        this.startHour = startHour;
     }
 
-    public ChoiceBox<Integer> getEndTime() {
-        return endTime;
+    public ChoiceBox<Integer> getStartMinute() {
+        return startMinute;
+    }
+
+    public void setStartMinute(ChoiceBox<Integer> startMinute) {
+        this.startMinute = startMinute;
+    }
+
+    public ChoiceBox<Integer> getEndHour() {
+        return endHour;
+    }
+
+    public void setEndHour(ChoiceBox<Integer> endHour) {
+        this.endHour = endHour;
+    }
+
+    public ChoiceBox<Integer> getEndMinute() {
+        return endMinute;
+    }
+
+    public void setEndMinute(ChoiceBox<Integer> endMinute) {
+        this.endMinute = endMinute;
     }
     
-    public void setTask(String tasK){
-        task.set(tasK);
-    } 
+    public void setTask(String task){
+        this.task = task;
+    }
     
-    public void setStartTime(String time){
-        startTime.set(time);
-    } 
+    public String getTask(){
+        return task;
+    }
     
-    public void setEndTime(ChoiceBox<Integer> endTime){
-        this.endTime = endTime;
-    } 
-
 }
-
