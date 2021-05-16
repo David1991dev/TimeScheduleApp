@@ -1,28 +1,24 @@
 package lotto;
 
-import java.io.File;
-import static java.lang.Math.random;
+
 import java.net.URL;
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Arc;
 
 public class FXMLDocumentController implements Initializable {
     private final int MAX = 90; //ha ide írjuk akkor bárhol elérjük ezen a fájlon belül
     private final int MIN = 1;
+    private final int AVARAGE = 10;
    
     
 //<editor-fold defaultstate="collapsed" desc="Class variables">
