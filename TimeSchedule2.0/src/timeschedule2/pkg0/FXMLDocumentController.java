@@ -138,6 +138,8 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
        table.getColumns().addAll(endCol2);
 //       table.getColumns().addAll(taskCol, startCol, endCol);
 //       time.getColumns().addAll(startCol, endCol);
+       
+        System.out.println("Teszt módosítás");
     
     }
     
