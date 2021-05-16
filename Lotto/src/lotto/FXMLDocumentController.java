@@ -18,10 +18,6 @@ import javafx.scene.layout.Pane;
 public class FXMLDocumentController implements Initializable {
     private final int MAX = 90; //ha ide írjuk akkor bárhol elérjük ezen a fájlon belül
     private final int MIN = 1;
-    private final int AVARAGE = 0;
-    private final int AVARAGE1 = 0;
-    
-    
    
     
 //<editor-fold defaultstate="collapsed" desc="Class variables">
