@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="anpa0" fx:id="anpa0" prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timeschedule2.pkg0.FXMLDocumentController">
+    <children>
+      <SplitPane dividerPositions="0.3442437923250564" layoutX="-1.0" layoutY="51.0" prefHeight="485.0" prefWidth="707.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
+         <items>
+            <AnchorPane id="anpa1" fx:id="anpa1" prefHeight="500.0" prefWidth="300.0">
+               <children>
+                  <SplitPane dividerPositions="0.5550561797752809" orientation="VERTICAL" prefHeight="457.0" prefWidth="306.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <items>
+                        <TableView id="table" fx:id="table" prefHeight="250" prefWidth="308.0">
+                           <padding>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </padding></TableView>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <TextField id="inputTask" fx:id="inputTask" layoutX="118.0" layoutY="31.0" text="Tanulás" />
+                              <ChoiceBox id="choiceBoxEnd" fx:id="choiceBoxEnd" layoutX="122.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
+                              <Label layoutX="14.0" layoutY="35.0" prefHeight="17.0" prefWidth="98.0" text="Feladat" />
+                              <Label layoutX="14.0" layoutY="66.0" prefHeight="17.0" prefWidth="98.0" text="Kezdés" />
+                              <ChoiceBox id="choiceBoxStart" fx:id="choiceBoxStart" layoutX="122.0" layoutY="62.0" prefHeight="25.0" prefWidth="62.0" />
+                              <Button fx:id="adButton" layoutX="112.0" layoutY="141.0" mnemonicParsing="false" onAction="#addNewTaskButton" text="Hozzáad" />
+                              <ChoiceBox id="choiceBoxEndMinute" fx:id="choiceBoxEndMinute" layoutX="205.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
+                              <ChoiceBox id="choiceBoxStartMinute" fx:id="choiceBoxStartMinute" layoutX="205.0" layoutY="62.0" prefHeight="25.0" prefWidth="62.0" />
+                              <Label layoutX="191.0" layoutY="66.0" text=":" />
+                              <Label layoutX="193.0" layoutY="97.0" text=":" />
+                              <Label layoutX="14.0" layoutY="97.0" prefHeight="17.0" prefWidth="98.0" text="Befejezés" />
+                           </children>
+                        </AnchorPane>
+                     </items>
+                  </SplitPane>
+               </children></AnchorPane>
+            <AnchorPane id="anpa2" fx:id="anpa2" prefHeight="200.0" prefWidth="200.0" />
+         </items></SplitPane>
+      <Label layoutX="341.0" layoutY="14.0" text="Időgazdálkodás">
+         <font>
+            <Font size="25.0" />
+         </font></Label>
+        <Button fx:id="button" layoutX="111.0" layoutY="14.0" onAction="#updateButtonAction" text="Update!" />
+    </children>
+</AnchorPane>
