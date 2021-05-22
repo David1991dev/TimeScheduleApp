@@ -15,6 +15,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.SnapshotParameters;
@@ -40,6 +41,7 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
+import javafx.util.converter.IntegerStringConverter;
 import static javax.swing.text.html.HTML.Tag.S;
 import static jdk.nashorn.internal.runtime.regexp.joni.encoding.CharacterType.S;
 
@@ -73,9 +75,10 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     
     ObservableList<Task> data = FXCollections.observableArrayList();
     
+    
     ArrayList<ChoiceBox> TimeArrayList = new ArrayList<ChoiceBox>();
     ArrayList<ChoiceBox> minutesArrayList = new ArrayList<ChoiceBox>();
-    ChoiceBox<Integer> tesztBox = new ChoiceBox<>();
+    
     ArcGenerator arcs = new ArcGenerator();
     
     float angle = 0.0f;
@@ -94,7 +97,7 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     
     @FXML
     private void updateButtonAction(ActionEvent event) {
-//        updateClocks();
+        updateClocks();
     }
     
 
@@ -103,45 +106,76 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
 // TABLE 
     
     public void setDateTabel(){
-       table.setEditable(true);
-       
-        tesztBox.getItems().add(10);
-        tesztBox.getItems().add(30);
+          
+    data.add(new Task("Edzés", 16, 18));
+    data.add(new Task("Munka", 8, 15));
+          
+
+    TableColumn taskCol = new TableColumn("Feladat");
+    TableColumn startTimeCol = new TableColumn("Kezdési idő");
+    TableColumn endTimeCol = new TableColumn("Befejezési idő");
+    
+    taskCol.setMinWidth(150);
+
+    
+    table.getColumns().addAll(taskCol,startTimeCol,endTimeCol);
+    
+
+    taskCol.setCellFactory(TextFieldTableCell.forTableColumn());
+    startTimeCol.setCellFactory(TextFieldTableCell.<Task, Integer>forTableColumn(new IntegerStringConverter()));
+    endTimeCol.setCellFactory(TextFieldTableCell.<Task, Integer>forTableColumn(new IntegerStringConverter()));
+    
+    taskCol.setCellValueFactory(new PropertyValueFactory<Task, String>("task"));
+    startTimeCol.setCellValueFactory(new PropertyValueFactory<Task, Integer>("startTime"));
+    endTimeCol.setCellValueFactory(new PropertyValueFactory<Task, Integer>("endTime"));
         
-        
-       TableColumn taskCol = new TableColumn("Feladat");
-       TableColumn startPeriod = new TableColumn("Kezdés");
-       TableColumn endPeriod = new TableColumn("Befejezés");
-       
-       TableColumn startHourCol = new TableColumn("Óra");
-       TableColumn startMinuteCol = new TableColumn("Perc");
-       TableColumn endHourCol = new TableColumn("Óra");
-       TableColumn endMinuteCol = new TableColumn("Perc");
-       
-        table.getColumns().addAll(taskCol,startPeriod,endPeriod);
-        startPeriod.getColumns().addAll(startHourCol, startMinuteCol);
-        endPeriod.getColumns().addAll(endHourCol, endMinuteCol);
-      
-       
-       data.add(new Task("Edzés", tesztBox, tesztBox, tesztBox, tesztBox));
-       taskCol.setCellFactory(TextFieldTableCell.forTableColumn());
-       startHourCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
-       startMinuteCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
-       endHourCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
-//       endCol.setCellFactory(ChoiceBoxTableCell.forTableColumn());
-        System.out.println("Lefutott a data.add");
-        table.setItems(data);
-       
-        try {
-            taskCol.setCellValueFactory(new PropertyValueFactory<Task, String>("task"));
-            startHourCol.setCellValueFactory(new PropertyValueFactory<Task, ChoiceBox>("startH"));
-            startMinuteCol.setCellValueFactory(new PropertyValueFactory<Task, ChoiceBox>("startM"));
-            endHourCol.setCellValueFactory(new PropertyValueFactory<Task, ChoiceBox>("endH"));
-            endMinuteCol.setCellValueFactory(new PropertyValueFactory<Task, ChoiceBox>("endM"));
-        } catch (Exception e) {
-            System.out.println(e);
+
+    
+
+        taskCol.setOnEditCommit(
+        new EventHandler<TableColumn.CellEditEvent<Task, String>>() {
+        @Override
+        public void handle(TableColumn.CellEditEvent<Task, String> tableColumnEvent) {
+            String newValue = tableColumnEvent.getNewValue();
+            int actualTableCellPosition = tableColumnEvent.getTablePosition().getRow();
+            Task actTask = tableColumnEvent.getTableView().getItems().get(actualTableCellPosition);
+            
+            actTask.setTask(tableColumnEvent.getNewValue());
+           
         }
-       
+    });
+        
+        startTimeCol.setOnEditCommit(
+        new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
+        @Override
+        public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
+            int newValue = tableColumnEvent.getNewValue();
+            int tableCellPosition = tableColumnEvent.getTablePosition().getRow();
+            Task actualTask = tableColumnEvent.getTableView().getItems().get(tableCellPosition);
+            
+            actualTask.setStartTime(newValue);
+           
+        }
+    });
+
+        endTimeCol.setOnEditCommit(
+        new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
+            @Override           
+            public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
+              int oldValue = tableColumnEvent.getOldValue();           
+              int actualTableCellPosition = tableColumnEvent.getTablePosition().getRow();
+
+              Task actualTask = tableColumnEvent.getTableView().getItems().get(actualTableCellPosition);
+              actualTask.setEndTime(tableColumnEvent.getNewValue());
+            }
+        });
+        
+
+
+    
+    table.setEditable(true);
+    table.setItems(data);   
+
     }
     
     private void choiceBoxMethod(){  
@@ -155,9 +189,14 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     }
 
 // ARC    
-    private void setArcVisual(Arc arc, int startH,int startM, int endH, int endM, double position) {
+    private void setArcVisual(Arc arc, int startH,int endH) {
         try{
-        arc.setCenterX(position);
+            if (startH > 15){
+                arc.setCenterX(400.0f);
+            }else{
+                arc.setCenterX(150.0f);
+            }
+        
         arc.setCenterY(220.0f);
         arc.setRadiusX(100.0f);
         arc.setRadiusY(arc.getRadiusX());
@@ -166,7 +205,7 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
         arc.setStroke(BLACK);
         arc.setStrokeWidth(2);
         arc.setOpacity(0.5);
-        setArcAngle(arc,startH,startM,endH,endM);
+        setArcAngle(arc,startH,endH);
         anpa2.getChildren().add(arc);
         if (brightness<0.9){
             brightness+=0.05;
@@ -184,12 +223,12 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
         }
     } 
     
-    private void setArcAngle(Arc modArc, int startH, int startM, int endH, int endM){
-        modArc.setStartAngle(setAngle(endH, endM));
-        modArc.setLength(getLength(startH, startM, endH, endM));
+    private void setArcAngle(Arc arc, int startH, int endH){
+        arc.setStartAngle(setAngle(endH));
+        arc.setLength(getLength(startH, endH));
     }
 
-    private double setAngle(int hour, int minute ){
+    private double setAngle(int hour){
             switch (hour) {
             case 6 : angle = -90.0f;break;
             case 7 : angle = -120.0f;break;
@@ -217,26 +256,27 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
             case 5 : angle = -60.0f;break;
             }
             
-            if (minute == 30){
-                if (hour>=3 && hour<=9 || hour>=15 && hour<=21){
-                    angle += 15.0f;
-                }else{
-                    angle -=15f;
-                }
-            }return angle;  
+//            if (minute == 30){
+//                if (hour>=3 && hour<=9 || hour>=15 && hour<=21){
+//                    angle += 15.0f;
+//                }else{
+//                    angle -=15f;
+//                }
+//            }
+        return angle;  
     }
     
-    private double getLength(int hourIn, int minuteIn, int hourOut, int minuteOut){
+    private double getLength(int startH,int endH){
         duration = 0.0f;
-        int diffHour = hourOut- hourIn;
-        int diffMinute = minuteOut - minuteIn;
-        if (minuteIn != 30 && minuteOut != 30){
-            if (diffMinute > 0){
-                duration += 15.0f; 
-            }else if(diffMinute <0){
-                duration -=15.0f;
-            }   
-        }
+        int diffHour = endH- startH;
+//        int diffMinute = minuteOut - minuteIn;
+//        if (minuteIn != 30 && minuteOut != 30){
+//            if (diffMinute > 0){
+//                duration += 15.0f; 
+//            }else if(diffMinute <0){
+//                duration -=15.0f;
+//            }   
+//        }
         duration += diffHour*30.0f;
        return duration; 
     }
@@ -274,37 +314,33 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
    
    @FXML
    private void addNewTaskButton (ActionEvent event){
-       if(choiceBoxEnd.getValue() != null && choiceBoxEndMinute != null && choiceBoxStart != null && choiceBoxStartMinute != null){
-       String startTime = choiceBoxStart.getValue() + ":" +choiceBoxStartMinute.getValue();
-       String endTime = choiceBoxEnd.getValue() + ":" +choiceBoxEndMinute.getValue();
-//       Task task = new Task(inputTask.getText(),startTime,endTime);
-//       data.add(task);
-//       updateClocks();
+//       if(choiceBoxEnd.getValue() != null && choiceBoxEndMinute != null && choiceBoxStart != null && choiceBoxStartMinute != null){
+       int startTime = (int) choiceBoxStart.getValue();
+       int endTime = (int) choiceBoxEnd.getValue();
+       Task task = new Task(inputTask.getText(),startTime,endTime);
+       data.add(task);
+       updateClocks();
        }
-   }
    
-//    private void updateClocks() {
-//        anpa2.getChildren().clear();
-//        setImage();
-//        ArrayList<Arc> arcList = new ArrayList<>();
-//        int index = 0;
-//        arcList = arcs.createArc();
-//
-//        for (Task actualTask : data) {
-//            List<String> arrListStartTime = new ArrayList<>(Arrays.asList(actualTask.getStartTime().split(":"))); 
-////            List<String> arrListEndTime = new ArrayList<>(Arrays.asList(actualTask.getEndTime().getValue().split(":"))); 
-//            Integer startH = Integer.parseInt(arrListStartTime.get(0));
-//            Integer startM = Integer.parseInt(arrListStartTime.get(1)); 
-////            Integer endH = Integer.parseInt(arrListEndTime.get(0));
-////            Integer endM = Integer.parseInt(arrListEndTime.get(1));
-////            System.out.println("startH: " + startH +"\n" +"start M: " +startM + "\n"+ "  endH: " + endH + "\n" +"\n endM" +endM);
-////            setArcVisual(arcList.get(index),startH,startM,endH,endM,150.0f);
-//            index++;
-//
-//        }
-//        
-//        
-//    }
+   
+    private void updateClocks() {
+        anpa2.getChildren().clear();
+        setImage();
+        ArrayList<Arc> arcList = new ArrayList<>();
+        int index = 0;
+        arcList = arcs.createArc();
+
+        for (Task actualTask : data) {
+                        
+            int startH = actualTask.getStartTime();
+            int endH = actualTask.getEndTime();
+            setArcVisual(arcList.get(index),startH,endH);
+            index++;
+
+        }
+        
+        
+    }
 
    
    
@@ -318,6 +354,7 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
         minutesArrayList.add(choiceBoxEndMinute);
         choiceBoxMethod();
         setDateTabel();
+
    
     }    
 

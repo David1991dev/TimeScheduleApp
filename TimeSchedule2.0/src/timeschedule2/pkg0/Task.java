@@ -11,67 +11,45 @@ import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.ChoiceBox;
 
-/**
- *
- * @author horva
- */
+
 public class Task {
     
     String task;
-    ChoiceBox<Integer> startHour;
-    ChoiceBox<Integer> startMinute;
-    ChoiceBox<Integer> endHour;
-    ChoiceBox<Integer> endMinute;
-    
+    int startTime;
+    int endTime;
+
 
     
-    Task(String task, ChoiceBox<Integer> startH, ChoiceBox<Integer> startM, ChoiceBox<Integer> endH, ChoiceBox<Integer> endM){
+
+    public Task(String task, int startTime, int endTime) {
         this.task = task;
-        this.startHour = startH;
-        this.startMinute = startM;
-        this.endHour = endH;
-        this.endMinute = endM;
-        
-    }
-
-    public ChoiceBox<Integer> getStartHour() {
-        return startHour;
-    }
-
-    public void setStartHour(ChoiceBox<Integer> startHour) {
-        this.startHour = startHour;
-    }
-
-    public ChoiceBox<Integer> getStartMinute() {
-        return startMinute;
-    }
-
-    public void setStartMinute(ChoiceBox<Integer> startMinute) {
-        this.startMinute = startMinute;
-    }
-
-    public ChoiceBox<Integer> getEndHour() {
-        return endHour;
-    }
-
-    public void setEndHour(ChoiceBox<Integer> endHour) {
-        this.endHour = endHour;
-    }
-
-    public ChoiceBox<Integer> getEndMinute() {
-        return endMinute;
-    }
-
-    public void setEndMinute(ChoiceBox<Integer> endMinute) {
-        this.endMinute = endMinute;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
     
-    public void setTask(String task){
-        this.task = task;
-    }
     
-    public String getTask(){
+    public String getTask() {
         return task;
     }
-    
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public void setTask(String task) {
+        this.task = task;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime (int endTime) {
+        this.endTime = endTime;
+    }
+  
 }
