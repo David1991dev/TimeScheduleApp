@@ -15,6 +15,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +25,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
@@ -107,27 +109,40 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     
     public void setDateTabel(){
           
-    data.add(new Task("Edzés", 16, 18));
-    data.add(new Task("Munka", 8, 15));
+//    data.add(new Task("Edzés", 16, 18));
+//    data.add(new Task("Munka", 8, 15));
+    data.add(new Task("Munka", 8,20, 16,59));
           
 
     TableColumn taskCol = new TableColumn("Feladat");
     TableColumn startTimeCol = new TableColumn("Kezdési idő");
     TableColumn endTimeCol = new TableColumn("Befejezési idő");
+    TableColumn startTimeHourCol = new TableColumn("Óra");
+    TableColumn startTimeMinuteCol = new TableColumn("Perc");
+    TableColumn endTimeHourCol = new TableColumn("Óra");
+    TableColumn endTimeMinuteCol = new TableColumn("Perc");
     
-    taskCol.setMinWidth(150);
-
+    taskCol.setMinWidth(190);
+    
     
     table.getColumns().addAll(taskCol,startTimeCol,endTimeCol);
+    startTimeCol.getColumns().addAll(startTimeHourCol,startTimeMinuteCol);
+    endTimeCol.getColumns().addAll(endTimeHourCol,endTimeMinuteCol);
+    
+    
     
 
     taskCol.setCellFactory(TextFieldTableCell.forTableColumn());
-    startTimeCol.setCellFactory(TextFieldTableCell.<Task, Integer>forTableColumn(new IntegerStringConverter()));
-    endTimeCol.setCellFactory(TextFieldTableCell.<Task, Integer>forTableColumn(new IntegerStringConverter()));
+    startTimeHourCol.setCellFactory(TextFieldTableCell.<Task, Integer>forTableColumn(new IntegerStringConverter()));
+    startTimeMinuteCol.setCellFactory(TextFieldTableCell.<Task, Integer>forTableColumn(new IntegerStringConverter()));
+    endTimeHourCol.setCellFactory(TextFieldTableCell.<Task, Integer>forTableColumn(new IntegerStringConverter()));
+    endTimeMinuteCol.setCellFactory(TextFieldTableCell.<Task, Integer>forTableColumn(new IntegerStringConverter()));
     
     taskCol.setCellValueFactory(new PropertyValueFactory<Task, String>("task"));
-    startTimeCol.setCellValueFactory(new PropertyValueFactory<Task, Integer>("startTime"));
-    endTimeCol.setCellValueFactory(new PropertyValueFactory<Task, Integer>("endTime"));
+    startTimeHourCol.setCellValueFactory(new PropertyValueFactory<Task, Integer>("startTimeHour"));
+    startTimeMinuteCol.setCellValueFactory(new PropertyValueFactory<Task, Integer>("startTimeMinute"));
+    endTimeHourCol.setCellValueFactory(new PropertyValueFactory<Task, Integer>("endTimeHour"));
+    endTimeMinuteCol.setCellValueFactory(new PropertyValueFactory<Task, Integer>("endTimeMinute"));
         
 
     
@@ -145,7 +160,7 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
         }
     });
         
-        startTimeCol.setOnEditCommit(
+        startTimeHourCol.setOnEditCommit(
         new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
         @Override
         public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
@@ -153,12 +168,26 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
             int tableCellPosition = tableColumnEvent.getTablePosition().getRow();
             Task actualTask = tableColumnEvent.getTableView().getItems().get(tableCellPosition);
             
-            actualTask.setStartTime(newValue);
+            actualTask.setStartTimeHour(newValue);
            
         }
     });
 
-        endTimeCol.setOnEditCommit(
+        startTimeMinuteCol.setOnEditCommit(
+            new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
+            @Override
+                public void handle(TableColumn.CellEditEvent<Task, Integer>tableCellEvent) {
+                    int newValue = tableCellEvent.getNewValue();
+                    int tableCellposition = tableCellEvent.getTablePosition().getRow();
+                    Task actualTask = tableCellEvent.getTableView().getItems().get(tableCellposition);
+                    
+                    actualTask.setStartTimeMinute(newValue);
+                    
+            
+        }
+    });
+        
+        endTimeHourCol.setOnEditCommit(
         new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
             @Override           
             public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
@@ -166,12 +195,26 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
               int actualTableCellPosition = tableColumnEvent.getTablePosition().getRow();
 
               Task actualTask = tableColumnEvent.getTableView().getItems().get(actualTableCellPosition);
-              actualTask.setEndTime(tableColumnEvent.getNewValue());
+              actualTask.setEndTimeHour(tableColumnEvent.getNewValue());
             }
         });
         
+        endTimeMinuteCol.setOnEditCommit(
+            new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
+            @Override
+                public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
+                    int newValue = tableColumnEvent.getNewValue();
+                    int tableCellPosition = tableColumnEvent.getTablePosition().getRow();
+                    Task actuTask = tableColumnEvent.getTableView().getItems().get(tableCellPosition);
 
+                    actuTask.setEndTimeMinute(newValue);
+            
+                }
+            }
+        );
+        
 
+        
     
     table.setEditable(true);
     table.setItems(data);   
@@ -189,7 +232,7 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     }
 
 // ARC    
-    private void setArcVisual(Arc arc, int startH,int endH) {
+    private void setArcVisual(Arc arc, int startH,int startM,int endH, int endM) {
         try{
             if (startH > 15){
                 arc.setCenterX(400.0f);
@@ -205,7 +248,7 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
         arc.setStroke(BLACK);
         arc.setStrokeWidth(2);
         arc.setOpacity(0.5);
-        setArcAngle(arc,startH,endH);
+        setArcAngle(arc,startH,startM,endH, endM);
         anpa2.getChildren().add(arc);
         if (brightness<0.9){
             brightness+=0.05;
@@ -223,12 +266,12 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
         }
     } 
     
-    private void setArcAngle(Arc arc, int startH, int endH){
-        arc.setStartAngle(setAngle(endH));
-        arc.setLength(getLength(startH, endH));
+    private void setArcAngle(Arc arc, int startH,int startM, int endH, int endM){
+        arc.setStartAngle(setAngle(endH,endM));
+        arc.setLength(getLength(startH,startM,endH,endM));
     }
 
-    private double setAngle(int hour){
+    private double setAngle(int hour, int minute){
             switch (hour) {
             case 6 : angle = -90.0f;break;
             case 7 : angle = -120.0f;break;
@@ -255,29 +298,27 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
             case 4 : angle = -30.0f;break;
             case 5 : angle = -60.0f;break;
             }
+//            System.out.println(angle);
+            float angleMinute;
+            angleMinute = (minute*0.5f); 
             
-//            if (minute == 30){
-//                if (hour>=3 && hour<=9 || hour>=15 && hour<=21){
-//                    angle += 15.0f;
-//                }else{
-//                    angle -=15f;
-//                }
-//            }
+                if (hour>=3 && hour<=9 || hour>=15 && hour<=21){
+                    angleMinute *= -1;
+                }else{
+                    angleMinute = angleMinute;
+                }
+            angle += angleMinute;
+                
         return angle;  
     }
     
-    private double getLength(int startH,int endH){
+    
+    
+    private double getLength(int startH, int startM, int endH, int endM){
         duration = 0.0f;
-        int diffHour = endH- startH;
-//        int diffMinute = minuteOut - minuteIn;
-//        if (minuteIn != 30 && minuteOut != 30){
-//            if (diffMinute > 0){
-//                duration += 15.0f; 
-//            }else if(diffMinute <0){
-//                duration -=15.0f;
-//            }   
-//        }
-        duration += diffHour*30.0f;
+        float diffHour = (endH - startH) * 30.0f;
+        duration =diffHour + endM*0.5f - startM *0.5f;
+        
        return duration; 
     }
     
@@ -332,9 +373,14 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
 
         for (Task actualTask : data) {
                         
-            int startH = actualTask.getStartTime();
-            int endH = actualTask.getEndTime();
-            setArcVisual(arcList.get(index),startH,endH);
+            int startH = actualTask.getStartTimeHour();
+            int startM = actualTask.getStartTimeMinute();
+            
+            int endH = actualTask.getEndTimeHour();
+            int endM = actualTask.getEndTimeMinute();
+//            System.out.println(startH + " " + startM + " " + endH + " " + endM);
+            
+            setArcVisual(arcList.get(index),startH,startM,endH,endM);
             index++;
 
         }

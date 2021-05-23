@@ -15,41 +15,69 @@ import javafx.scene.control.ChoiceBox;
 public class Task {
     
     String task;
-    int startTime;
-    int endTime;
+    int startTimeHour;
+    int startTimeMinute;
+    int endTimeHour;
+    int endTimeMinute;
+
+    public Task(String task, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute) {
+        this.task = task;
+        this.startTimeHour = startTimeHour;
+        this.startTimeMinute = startTimeMinute;
+        this.endTimeHour = endTimeHour;
+        this.endTimeMinute = endTimeMinute;
+    }
 
 
     
 
     public Task(String task, int startTime, int endTime) {
         this.task = task;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTimeHour = startTime;
+        this.endTimeHour = endTime;
     }
-    
+        
     
     public String getTask() {
         return task;
     }
 
-    public int getStartTime() {
-        return startTime;
+    public int getStartTimeHour() {
+        return startTimeHour;
     }
 
-    public int getEndTime() {
-        return endTime;
+    public int getEndTimeHour() {
+        return endTimeHour;
     }
 
+    public int getStartTimeMinute() {
+        return startTimeMinute;
+    }
+
+    public int getEndTimeMinute() {
+        return endTimeMinute;
+    }
+    
     public void setTask(String task) {
         this.task = task;
     }
 
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
+    public void setStartTimeHour(int startTime) {
+        this.startTimeHour = startTime;
     }
 
-    public void setEndTime (int endTime) {
-        this.endTime = endTime;
+    public void setEndTimeHour (int endTime) {
+        this.endTimeHour = endTime;
     }
+
+    public void setStartTimeMinute(int startTimeMinute) {
+        this.startTimeMinute = startTimeMinute;
+    }
+
+    public void setEndTimeMinute(int endTimeMinute) {
+        this.endTimeMinute = endTimeMinute;
+    }
+    
+    
   
 }
