@@ -1,0 +1,43 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23-May-2021, 10:40:59
+    Author     : horva
+*/
+
+.root{
+     -fx-background-color: gainsboro;
+}
+
+.anpa1{
+    -fx-background-color: green;
+}
+
+#anpa2{
+    /*-fx-background-color: FFFFCC;*/
+    /*-fx-background-color: rgb(239,238,220)*/
+    /*-fx-background-image: url("clock.jpg");*/
+    /*-fx-background-image: url("/timeschedule2/pkg0/hexagon.jpg");*/
+    -fx-background-image: url("clock_background_final.png");
+    -fx-background-size: stretch;
+    
+    
+    
+}
+
+/*.table-view{
+    align-content:center;
+    align-items: center;
+}
+
+.table-view:focused{
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:odd{
+    -fx-alignment: CENTER;
+    -fx-background-color:green;
+}*/

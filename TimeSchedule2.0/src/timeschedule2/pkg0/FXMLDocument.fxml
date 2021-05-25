@@ -28,23 +28,29 @@
                               <Label layoutX="14.0" layoutY="35.0" prefHeight="17.0" prefWidth="98.0" text="Feladat" />
                               <Label layoutX="14.0" layoutY="66.0" prefHeight="17.0" prefWidth="98.0" text="Kezdés" />
                               <ChoiceBox id="choiceBoxStart" fx:id="choiceBoxStart" layoutX="122.0" layoutY="62.0" prefHeight="25.0" prefWidth="62.0" />
-                              <Button fx:id="adButton" layoutX="112.0" layoutY="141.0" mnemonicParsing="false" onAction="#addNewTaskButton" text="Hozzáad" />
-                              <ChoiceBox id="choiceBoxEndMinute" fx:id="choiceBoxEndMinute" layoutX="205.0" layoutY="93.0" prefHeight="25.0" prefWidth="62.0" />
-                              <ChoiceBox id="choiceBoxStartMinute" fx:id="choiceBoxStartMinute" layoutX="205.0" layoutY="62.0" prefHeight="25.0" prefWidth="62.0" />
+                              <Button fx:id="adButton" layoutX="112.0" layoutY="141.0" mnemonicParsing="false" onAction="#addNewTaskButton" text="Add" />
                               <Label layoutX="191.0" layoutY="66.0" text=":" />
                               <Label layoutX="193.0" layoutY="97.0" text=":" />
                               <Label layoutX="14.0" layoutY="97.0" prefHeight="17.0" prefWidth="98.0" text="Befejezés" />
+                              <TextField id="startMinuteInput" fx:id="startMinuteInput" layoutX="203.0" layoutY="62.0" prefHeight="25.0" prefWidth="40.0" />
+                              <TextField id="endMinuteInput" fx:id="endMinuteInput" layoutX="203.0" layoutY="93.0" prefHeight="25.0" prefWidth="40.0" />
                            </children>
                         </AnchorPane>
                      </items>
                   </SplitPane>
                </children></AnchorPane>
-            <AnchorPane id="anpa2" fx:id="anpa2" prefHeight="200.0" prefWidth="200.0" />
+            <AnchorPane id="anpa2" fx:id="anpa2" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="morningLabel" layoutX="125.0" layoutY="4.0" prefWidth="60.0" text="Morning" />
+                  <Label fx:id="afternoonLabel" layoutX="370.0" layoutY="4.0" prefWidth="60.0" text="Afternoon" />
+                  <Label fx:id="morningTimeLabel" layoutX="117.5" layoutY="24.0" prefWidth="65.0" text="3AM - 3PM" />
+                  <Label fx:id="afternoonTimeLabel" layoutX="367.5" layoutY="24.0" prefWidth="65.0" text="3PM - 3AM" />
+               </children></AnchorPane>
          </items></SplitPane>
-      <Label layoutX="341.0" layoutY="14.0" text="Időgazdálkodás">
+      <Label layoutX="341.0" layoutY="9.0" text="Time management">
          <font>
             <Font size="25.0" />
          </font></Label>
-        <Button fx:id="button" layoutX="111.0" layoutY="14.0" onAction="#updateButtonAction" text="Update!" />
+        <Button fx:id="button" layoutX="171.0" layoutY="14.0" onAction="#updateButtonAction" text="Update!" />
     </children>
 </AnchorPane>

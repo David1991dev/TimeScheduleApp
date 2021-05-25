@@ -23,12 +23,14 @@ public class TimeSchedule20 extends Application {
     Scene scene;
     public Stage stage1;
     
+    
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         
         
-        scene = new Scene(root,900,500);
+        scene = new Scene(root,1000,500);
+        scene.getStylesheets().add("/CSS/mycss.css");
         stage.setScene(scene);
         stage.show();
         stage.setTitle("Time Schedule");

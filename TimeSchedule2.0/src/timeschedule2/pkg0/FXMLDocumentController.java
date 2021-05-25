@@ -5,6 +5,7 @@
  */
 package timeschedule2.pkg0;
 
+import java.awt.Component;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +24,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableRow;
@@ -44,6 +46,7 @@ import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
+import javax.swing.JLabel;
 import static javax.swing.text.html.HTML.Tag.S;
 import static jdk.nashorn.internal.runtime.regexp.joni.encoding.CharacterType.S;
 
@@ -53,6 +56,14 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     @FXML
             Label label;
     @FXML
+            Label afternoonLabel;
+    @FXML
+            Label morningLabel;
+    @FXML
+            Label morningTimeLabel;
+    @FXML
+            Label afternoonTimeLabel;
+    @FXML
             AnchorPane anpa0;
     @FXML
             AnchorPane anpa1;
@@ -60,6 +71,7 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
             AnchorPane anpa2;
     @FXML
             TableView table;
+    
     @FXML
             ChoiceBox choiceBoxStart;
     @FXML
@@ -68,8 +80,14 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
             ChoiceBox choiceBoxEndMinute;
     @FXML
             ChoiceBox choiceBoxStartMinute;
+    
     @FXML
             TextField inputTask;
+    
+    @FXML
+            TextField startMinuteInput;
+    @FXML
+            TextField endMinuteInput;
     @FXML   
             Color gray;
     
@@ -79,7 +97,6 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     
     
     ArrayList<ChoiceBox> TimeArrayList = new ArrayList<ChoiceBox>();
-    ArrayList<ChoiceBox> minutesArrayList = new ArrayList<ChoiceBox>();
     
     ArcGenerator arcs = new ArcGenerator();
     
@@ -89,6 +106,8 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     byte num;
     double brightness = 0.2;
     double colour = 100;
+    double morningClockPosition = 150;
+    double afternoonClockPosition = 400;
   
         
     @FXML
@@ -101,9 +120,8 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     private void updateButtonAction(ActionEvent event) {
         updateClocks();
     }
+        
     
-
-
     
 // TABLE 
     
@@ -121,11 +139,12 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     TableColumn startTimeMinuteCol = new TableColumn("Perc");
     TableColumn endTimeHourCol = new TableColumn("Óra");
     TableColumn endTimeMinuteCol = new TableColumn("Perc");
+    TableColumn colorCol = new TableColumn("Szín");
     
     taskCol.setMinWidth(190);
     
     
-    table.getColumns().addAll(taskCol,startTimeCol,endTimeCol);
+    table.getColumns().addAll(taskCol,startTimeCol,endTimeCol,colorCol);
     startTimeCol.getColumns().addAll(startTimeHourCol,startTimeMinuteCol);
     endTimeCol.getColumns().addAll(endTimeHourCol,endTimeMinuteCol);
     
@@ -154,7 +173,6 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
             String newValue = tableColumnEvent.getNewValue();
             int actualTableCellPosition = tableColumnEvent.getTablePosition().getRow();
             Task actTask = tableColumnEvent.getTableView().getItems().get(actualTableCellPosition);
-            
             actTask.setTask(tableColumnEvent.getNewValue());
            
         }
@@ -225,22 +243,18 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
         TimeArrayList.forEach((t) -> {
             t.getItems().addAll(null,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,5);
         });
-        
-        minutesArrayList.forEach((t) -> {
-            t.getItems().addAll(null,0,30);
-        });
     }
 
 // ARC    
     private void setArcVisual(Arc arc, int startH,int startM,int endH, int endM) {
         try{
-            if (startH > 15){
-                arc.setCenterX(400.0f);
+            if (endH > 15 && startH >= 12){
+                arc.setCenterX(afternoonClockPosition);
             }else{
-                arc.setCenterX(150.0f);
+                arc.setCenterX(morningClockPosition);
             }
         
-        arc.setCenterY(220.0f);
+        arc.setCenterY(180.0f);
         arc.setRadiusX(100.0f);
         arc.setRadiusY(arc.getRadiusX());
         arc.setType(ArcType.ROUND);
@@ -324,13 +338,13 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     
    private void setImage(){
        try {
-       double y = 220.0;
-       double x = 150.0;
-       double x2 = 400.0;
+       double y = 180.0;
+       double x = morningClockPosition;
+       double x2 = afternoonClockPosition;
        double sizeX = 230.0;
        double sizeY = 230.0;
-       ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("clock.jpg")));
-       ImageView imageView2 = new ImageView(new Image(getClass().getResourceAsStream("clock.jpg")));
+       ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("clock5.png")));
+       ImageView imageView2 = new ImageView(new Image(getClass().getResourceAsStream("clock5.png")));
        imageView.setFitHeight(sizeX);
        imageView.setFitWidth(sizeY);
        imageView.setLayoutX(x-(sizeX/2));
@@ -358,7 +372,9 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
 //       if(choiceBoxEnd.getValue() != null && choiceBoxEndMinute != null && choiceBoxStart != null && choiceBoxStartMinute != null){
        int startTime = (int) choiceBoxStart.getValue();
        int endTime = (int) choiceBoxEnd.getValue();
-       Task task = new Task(inputTask.getText(),startTime,endTime);
+       int startTimeMinute = Integer.parseInt(startMinuteInput.getText());
+       int endTimeMinute = Integer.parseInt(endMinuteInput.getText());
+       Task task = new Task(inputTask.getText(),startTime,startTimeMinute,endTime,endTimeMinute);
        data.add(task);
        updateClocks();
        }
@@ -381,23 +397,31 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
 //            System.out.println(startH + " " + startM + " " + endH + " " + endM);
             
             setArcVisual(arcList.get(index),startH,startM,endH,endM);
-            index++;
+            index++;            
 
         }
         
         
+    }
+    
+    
+    public void setLabelsPosition(){
+        
+        afternoonLabel.setLayoutX(morningClockPosition - (afternoonLabel.getPrefWidth()/2));
+        morningTimeLabel.setLayoutX(morningClockPosition - (morningTimeLabel.getPrefWidth()/2));
+        
+        morningLabel.setLayoutX(afternoonClockPosition- (morningLabel.getPrefWidth()/2));        
+        afternoonTimeLabel.setLayoutX(afternoonClockPosition - (afternoonLabel.getPrefWidth()/2));
     }
 
    
    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       
+        setLabelsPosition();
         setImage();
         TimeArrayList.add(choiceBoxEnd);
         TimeArrayList.add(choiceBoxStart);
-        minutesArrayList.add(choiceBoxStartMinute);
-        minutesArrayList.add(choiceBoxEndMinute);
         choiceBoxMethod();
         setDateTabel();
 
