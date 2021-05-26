@@ -29,7 +29,7 @@ public class TimeSchedule20 extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         
         
-        scene = new Scene(root,1000,500);
+        scene = new Scene(root,1200,650);
         scene.getStylesheets().add("/CSS/mycss.css");
         stage.setScene(scene);
         stage.show();

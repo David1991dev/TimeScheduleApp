@@ -21,6 +21,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -107,7 +108,7 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     double brightness = 0.2;
     double colour = 100;
     double morningClockPosition = 150;
-    double afternoonClockPosition = 400;
+    double afternoonClockPosition = 500;
   
         
     @FXML
@@ -132,19 +133,20 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
     data.add(new Task("Munka", 8,20, 16,59));
           
 
-    TableColumn taskCol = new TableColumn("Feladat");
-    TableColumn startTimeCol = new TableColumn("Kezdési idő");
-    TableColumn endTimeCol = new TableColumn("Befejezési idő");
-    TableColumn startTimeHourCol = new TableColumn("Óra");
-    TableColumn startTimeMinuteCol = new TableColumn("Perc");
-    TableColumn endTimeHourCol = new TableColumn("Óra");
-    TableColumn endTimeMinuteCol = new TableColumn("Perc");
-    TableColumn colorCol = new TableColumn("Szín");
+    TableColumn taskCol = new TableColumn("Task");
+    TableColumn startTimeCol = new TableColumn("Start time");
+    TableColumn endTimeCol = new TableColumn("End time");
+    TableColumn startTimeHourCol = new TableColumn("Hour");
+    TableColumn startTimeMinuteCol = new TableColumn("Minute");
+    TableColumn endTimeHourCol = new TableColumn("Hour");
+    TableColumn endTimeMinuteCol = new TableColumn("Minute");
+    TableColumn colorCol = new TableColumn("Colour");
+    TableColumn deleteCol = new TableColumn("Delete");
     
     taskCol.setMinWidth(190);
     
     
-    table.getColumns().addAll(taskCol,startTimeCol,endTimeCol,colorCol);
+    table.getColumns().addAll(taskCol,startTimeCol,endTimeCol,deleteCol);
     startTimeCol.getColumns().addAll(startTimeHourCol,startTimeMinuteCol);
     endTimeCol.getColumns().addAll(endTimeHourCol,endTimeMinuteCol);
     
@@ -165,75 +167,118 @@ public class FXMLDocumentController extends TimeSchedule20 implements Initializa
         
 
     
+    //<editor-fold defaultstate="collapsed" desc="Event handlers">
 
-        taskCol.setOnEditCommit(
-        new EventHandler<TableColumn.CellEditEvent<Task, String>>() {
-        @Override
-        public void handle(TableColumn.CellEditEvent<Task, String> tableColumnEvent) {
-            String newValue = tableColumnEvent.getNewValue();
-            int actualTableCellPosition = tableColumnEvent.getTablePosition().getRow();
-            Task actTask = tableColumnEvent.getTableView().getItems().get(actualTableCellPosition);
-            actTask.setTask(tableColumnEvent.getNewValue());
-           
-        }
-    });
-        
-        startTimeHourCol.setOnEditCommit(
-        new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
-        @Override
-        public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
-            int newValue = tableColumnEvent.getNewValue();
-            int tableCellPosition = tableColumnEvent.getTablePosition().getRow();
-            Task actualTask = tableColumnEvent.getTableView().getItems().get(tableCellPosition);
-            
-            actualTask.setStartTimeHour(newValue);
-           
-        }
-    });
+    taskCol.setOnEditCommit(
+            new EventHandler<TableColumn.CellEditEvent<Task, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<Task, String> tableColumnEvent) {
+                    String newValue = tableColumnEvent.getNewValue();
+                    int actualTableCellPosition = tableColumnEvent.getTablePosition().getRow();
+                    Task actTask = tableColumnEvent.getTableView().getItems().get(actualTableCellPosition);
+                    actTask.setTask(tableColumnEvent.getNewValue());
 
-        startTimeMinuteCol.setOnEditCommit(
+                }
+            });
+
+    startTimeHourCol.setOnEditCommit(
             new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
-            @Override
+                @Override
+                public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
+                    int newValue = tableColumnEvent.getNewValue();
+                    int tableCellPosition = tableColumnEvent.getTablePosition().getRow();
+                    Task actualTask = tableColumnEvent.getTableView().getItems().get(tableCellPosition);
+
+                    actualTask.setStartTimeHour(newValue);
+
+                }
+            });
+
+    startTimeMinuteCol.setOnEditCommit(
+            new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
+                @Override
                 public void handle(TableColumn.CellEditEvent<Task, Integer>tableCellEvent) {
                     int newValue = tableCellEvent.getNewValue();
                     int tableCellposition = tableCellEvent.getTablePosition().getRow();
                     Task actualTask = tableCellEvent.getTableView().getItems().get(tableCellposition);
-                    
-                    actualTask.setStartTimeMinute(newValue);
-                    
-            
-        }
-    });
-        
-        endTimeHourCol.setOnEditCommit(
-        new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
-            @Override           
-            public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
-              int oldValue = tableColumnEvent.getOldValue();           
-              int actualTableCellPosition = tableColumnEvent.getTablePosition().getRow();
 
-              Task actualTask = tableColumnEvent.getTableView().getItems().get(actualTableCellPosition);
-              actualTask.setEndTimeHour(tableColumnEvent.getNewValue());
-            }
-        });
-        
-        endTimeMinuteCol.setOnEditCommit(
+                    actualTask.setStartTimeMinute(newValue);
+
+
+                }
+            });
+
+    endTimeHourCol.setOnEditCommit(
             new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
-            @Override
+                @Override
+                public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
+                    int oldValue = tableColumnEvent.getOldValue();
+                    int actualTableCellPosition = tableColumnEvent.getTablePosition().getRow();
+
+                    Task actualTask = tableColumnEvent.getTableView().getItems().get(actualTableCellPosition);
+                    actualTask.setEndTimeHour(tableColumnEvent.getNewValue());
+                }
+            });
+
+    endTimeMinuteCol.setOnEditCommit(
+            new EventHandler<TableColumn.CellEditEvent<Task, Integer>>() {
+                @Override
                 public void handle(TableColumn.CellEditEvent<Task, Integer> tableColumnEvent) {
                     int newValue = tableColumnEvent.getNewValue();
                     int tableCellPosition = tableColumnEvent.getTablePosition().getRow();
                     Task actuTask = tableColumnEvent.getTableView().getItems().get(tableCellPosition);
 
                     actuTask.setEndTimeMinute(newValue);
-            
+
                 }
             }
-        );
-        
+    );
 
-        
+    //</editor-fold>
     
+    
+    //Delete col.
+    
+    //<editor-fold defaultstate="collapsed" desc="Delete button">
+    Callback<TableColumn<Task,String>,TableCell<Task, String>> deleteCallback =
+            new Callback<TableColumn<Task, String>, TableCell<Task, String>>()
+            {
+                @Override
+                public TableCell call (final TableColumn<Task, String> param)
+                {
+                    final TableCell<Task, String> cell = new TableCell<Task, String>()
+                    {
+                        final Button btn = new Button("Törlés");
+
+                        @Override
+                        public void updateItem (String item, boolean empty)
+                        {
+                            super.updateItem(item, empty);
+                            if (empty){
+                                setGraphic(null);
+                                setText(null);
+                            }else{
+                                btn.setOnAction((ActionEvent event) ->
+                                {
+                                    Task actualTask = getTableView().getItems().get(getIndex());
+                                    data.remove(actualTask);
+                                }
+                                );
+                                setGraphic(btn);
+                                setText(null);
+                            }
+
+                        }
+                    };
+                    return cell;
+
+                }
+            };
+    //</editor-fold>
+    
+    deleteCol.setCellFactory(deleteCallback);
+    
+ 
     table.setEditable(true);
     table.setItems(data);   
 
